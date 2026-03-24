@@ -76,6 +76,14 @@
                 <input type="range" id="setting-speech-volume" min="0" max="100" value="100" style="width: 100%; margin-top: 5px;">
             </div>
             
+            <!-- Game Size Controls -->
+            <div class="setting-group">
+                <h3>Spelgrootte</h3>
+                <label style="display: block; margin-top: 10px;">Aantal dieren in het spel: <span id="num-animals-display">20</span></label>
+                <input type="range" id="setting-num-animals" min="20" max="30" value="20" style="width: 100%; margin-top: 5px;">
+                <small style="color: #666; display: block; margin-top: 5px;">Wijziging wordt actief bij de start van een nieuw spel.</small>
+            </div>
+            
             <div class="modal-buttons" style="margin-top: 20px;">
                 <button class="modal-btn modal-btn-cancel" id="modal-btn-close-settings">Sluiten</button>
             </div>
@@ -141,6 +149,11 @@
         </div>
     </div>
     
+    <!-- Confetti Container -->
+    <div id="tsparticles"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+    <script src="animals.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

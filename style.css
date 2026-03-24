@@ -536,7 +536,7 @@ main {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 2px;
-    padding: 4px;
+    padding: 12px 4px 4px 4px; /* Ruimte aan de bovenkant toegevoegd voor de tekst */
     box-sizing: border-box;
     position: relative;
 }

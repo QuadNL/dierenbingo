@@ -10,37 +10,17 @@ const CONFIG = {
     PAGE_FORMAT: 'A5-landscape',
 };
 
-const ANIMALS = [
-    { id: 'hond', name: 'Hond', icon: '🐶' },
-    { id: 'kat', name: 'Kat', icon: '🐱' },
-    { id: 'koe', name: 'Koe', icon: '🐮' },
-    { id: 'varken', name: 'Varken', icon: '🐷' },
-    { id: 'schaap', name: 'Schaap', icon: '🐑' },
-    { id: 'paard', name: 'Paard', icon: '🐴' },
-    { id: 'kip', name: 'Kip', icon: '🐔' },
-    { id: 'eend', name: 'Eend', icon: '🦆' },
-    { id: 'konijn', name: 'Konijn', icon: '🐰' },
-    { id: 'muis', name: 'Muis', icon: '🐭' },
-    { id: 'olifant', name: 'Olifant', icon: '🐘' },
-    { id: 'leeuw', name: 'Leeuw', icon: '🦁' },
-    { id: 'aap', name: 'Aap', icon: '🐒' },
-    { id: 'beer', name: 'Beer', icon: '🐻' },
-    { id: 'krokodil', name: 'Krokodil', icon: '🐊' },
-    { id: 'slang', name: 'Slang', icon: '🐍' },
-    { id: 'tijger', name: 'Tijger', icon: '🐯' },
-    { id: 'zebra', name: 'Zebra', icon: '🦓' },
-    { id: 'giraf', name: 'Giraf', icon: '🦒' },
-    { id: 'pinguin', name: 'Pinguïn', icon: '🐧' },
-].map(a => ({
-    ...a,
-    svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="15" fill="%23fdf6e3" stroke="%23ff9f43" stroke-width="2"/><text x="50" y="70" font-size="60" text-anchor="middle">${a.icon}</text></svg>`
-}));
-
-// Validate animal count
-console.assert(ANIMALS.length === 20, '❌ Must have exactly 20 unique animals');
+// Haal de actieve selectie dieren op basis van het instellingen menu
+function getActiveAnimals() {
+    // ALL_ANIMALS komt uit animals.js
+    return ALL_ANIMALS.slice(0, settings.numAnimals).map(a => ({
+        ...a,
+        svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="15" fill="%23fdf6e3" stroke="%23ff9f43" stroke-width="2"/><text x="50" y="70" font-size="60" text-anchor="middle">${a.icon}</text></svg>`
+    }));
+}
 
 // ============ STATE ============
-let state = { remaining: [...ANIMALS], drawn: [] };
+let state = { remaining: [], drawn: [] };
 let audioCtx;
 let bgMusicIsPlaying = false;
 let bgMusicVolume = 0.1;  // 10% baseline volume
@@ -50,7 +30,8 @@ const settings = {
     soundEnabled: true,
     speechEnabled: true,
     speechVolume: 1,
-    bgMusicVolume: 0.1  // 10% baseline
+    bgMusicVolume: 0.1, // 10% baseline
+    numAnimals: 20
 };
 
 // Load settings from localStorage
@@ -58,6 +39,7 @@ function loadSettings() {
     const saved = localStorage.getItem('bingoSettings');
     if (saved) {
         Object.assign(settings, JSON.parse(saved));
+        settings.numAnimals = Math.min(30, Math.max(20, settings.numAnimals)); // Forceer maximaal 30
     }
 }
 
@@ -199,58 +181,61 @@ function renderBoard() {
 }
 
 function confetti() {
-    // Create confetti particles
-    const canvas = document.createElement('canvas');
-    canvas.id = 'confetti';
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '9999';
-    document.body.appendChild(canvas);
+    // Haal de emoji iconen op van de dieren die momenteel actief zijn in het spel
+    const animalIcons = getActiveAnimals().map(a => a.icon);
     
-    const ctx = canvas.getContext('2d');
-    const particles = [];
-    
-    for (let i = 0; i < 250; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height - canvas.height,
-            vx: (Math.random() - 0.5) * 8,
-            vy: Math.random() * 5 + 3,
-            life: 2,
-            color: ['#ff9f43', '#1dd1a1', '#ee5253', '#ffa502'][Math.floor(Math.random() * 4)],
-            size: Math.random() * 6 + 2
-        });
+    // Vernietig eventuele vorige instantie zodat hij soepel opnieuw kan afspelen bij meerdere keren klikken
+    const existing = tsParticles.domItem(0);
+    if (existing) {
+        existing.destroy();
     }
-    
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let alive = false;
-        
-        particles.forEach(p => {
-            p.y += p.vy;
-            p.x += p.vx;
-            p.vy += 0.2; // gravity
-            p.life -= 0.016;
-            p.vx *= 0.99; // air resistance
-            
-            if (p.life > 0) {
-                alive = true;
-                ctx.fillStyle = p.color;
-                ctx.globalAlpha = p.life / 2;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
+
+    tsParticles.load("tsparticles", {
+        "fullScreen": {
+            "zIndex": 10000
+        },
+        "particles": {
+            "number": { "value": 0 },
+            "color": { "value": ["#00FFFC", "#FC00FF", "#fffc00"] },
+            "shape": {
+                "type": "character",
+                "options": {
+                    "character": {
+                        "value": animalIcons,
+                        "font": "sans-serif",
+                        "weight": "400"
+                    }
+                }
+            },
+            "opacity": {
+                "value": 1
+            },
+            "size": {
+                "value": { "min": 20, "max": 35 }
+            },
+            "links": { "enable": false },
+            "move": {
+                "enable": true,
+                "gravity": { "enable": true, "acceleration": 15 },
+                "speed": { "min": 30, "max": 80 },
+                "decay": 0.05,
+                "direction": "top",
+                "outModes": { "default": "destroy", "top": "none" }
+            },
+            "rotate": {
+                "value": { "min": 0, "max": 360 },
+                "direction": "random",
+                "move": true,
+                "animation": { "enable": true, "speed": 60 }
             }
-        });
-        
-        ctx.globalAlpha = 1;
-        if (alive) requestAnimationFrame(animate);
-        else canvas.remove();
-    }
-    
-    animate();
+        },
+        "emitters": {
+            "direction": "top",
+            "position": { "x": 50, "y": 100 }, // Onderaan in het midden
+            "rate": { "delay": 0.1, "quantity": 10 }, // Continue stroom confetti
+            "size": { "width": 100, "height": 0 }
+        }
+    });
 }
 
 function drawAnimal() {
@@ -299,6 +284,8 @@ function generatePrintCards(numCards) {
     let html = '';
     let cardIndex = 0;
     
+    const currentAnimals = getActiveAnimals();
+    
     // Generate pages with 4 cards each (2x2 grid)
     for (let pageNum = 0; cardIndex < numCards; pageNum++) {
         html += '<div class="print-page">';
@@ -307,10 +294,11 @@ function generatePrintCards(numCards) {
         for (let cardInPage = 0; cardInPage < 4 && cardIndex < numCards; cardInPage++) {
             cardIndex++;
             
-            const shuffled = [...ANIMALS].sort(() => 0.5 - Math.random());
+            const shuffled = [...currentAnimals].sort(() => 0.5 - Math.random());
             const cardAnimals = shuffled.slice(0, 11);
             
             html += `<div class="print-card">`;
+            html += `<div style="position: absolute; top: 1px; left: 4px; font-size: 8px; color: #666; font-weight: bold;">Bingo met ${currentAnimals.length} dieren</div>`;
             html += `<div class="print-card-number">${cardIndex}</div>`;
             
             // Wildcard first
@@ -433,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalResume.classList.remove('hidden');
             } else {
                 // New game greeting
+                if (!saved) state = { remaining: [...getActiveAnimals()], drawn: [] };
                 speakGreeting('Nieuwe bingo ronde wordt gestart, veel succes!');
                 if (saved) state = JSON.parse(saved);
                 renderBoard();
@@ -452,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     document.getElementById('modal-btn-new-game-start').addEventListener('click', () => {
-        state = { remaining: [...ANIMALS], drawn: [] };
+        state = { remaining: [...getActiveAnimals()], drawn: [] };
         localStorage.setItem('bingoState', JSON.stringify(state));
         renderBoard();
         speakGreeting('Nieuwe bingo ronde wordt gestart, veel succes!');
@@ -493,8 +482,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingSpeechEnabled = document.getElementById('setting-speech-enabled');
     const settingSpeechVolume = document.getElementById('setting-speech-volume');
     const settingBgVolume = document.getElementById('setting-bg-volume');
+    const settingNumAnimals = document.getElementById('setting-num-animals');
     const speechVolDisplay = document.getElementById('speech-vol-display');
     const bgVolDisplay = document.getElementById('bg-vol-display');
+    const numAnimalsDisplay = document.getElementById('num-animals-display');
     const bgMusicElement = document.getElementById('background-music');
     
     // Load settings into UI
@@ -504,6 +495,8 @@ document.addEventListener('DOMContentLoaded', () => {
     speechVolDisplay.textContent = Math.round(settings.speechVolume * 100) + '%';
     settingBgVolume.value = settings.bgMusicVolume * 100;
     bgVolDisplay.textContent = Math.round(settings.bgMusicVolume * 100) + '%';
+    settingNumAnimals.value = settings.numAnimals;
+    numAnimalsDisplay.textContent = settings.numAnimals;
     
     // Settings handlers
     document.getElementById('btn-settings').addEventListener('click', () => {
@@ -531,6 +524,12 @@ document.addEventListener('DOMContentLoaded', () => {
         bgMusicVolume = settings.bgMusicVolume;
         if (bgMusicElement && bgMusicIsPlaying) bgMusicElement.volume = settings.bgMusicVolume;
         bgVolDisplay.textContent = e.target.value + '%';
+        saveSettings();
+    });
+    
+    settingNumAnimals.addEventListener('input', (e) => {
+        settings.numAnimals = parseInt(e.target.value);
+        numAnimalsDisplay.textContent = e.target.value;
         saveSettings();
     });
     
@@ -562,11 +561,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal: BINGO
     const modalBingo = document.getElementById('modal-bingo');
     document.getElementById('modal-btn-continue').addEventListener('click', () => {
+        const existing = tsParticles.domItem(0);
+        if (existing) existing.destroy(); // Stop confetti
         modalBingo.classList.add('hidden');
     });
     
     document.getElementById('modal-btn-new-game').addEventListener('click', () => {
-        state = { remaining: [...ANIMALS], drawn: [] };
+        const existing = tsParticles.domItem(0);
+        if (existing) existing.destroy(); // Stop confetti
+        state = { remaining: [...getActiveAnimals()], drawn: [] };
         localStorage.setItem('bingoState', JSON.stringify(state));
         document.getElementById('result').classList.add('hidden');
         document.getElementById('btn-draw').disabled = false;
@@ -578,7 +581,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal: Reset
     const modalReset = document.getElementById('modal-reset');
     document.getElementById('modal-btn-reset-yes').addEventListener('click', () => {
-        state = { remaining: [...ANIMALS], drawn: [] };
+        const existing = tsParticles.domItem(0);
+        if (existing) existing.destroy(); // Stop confetti
+        state = { remaining: [...getActiveAnimals()], drawn: [] };
         localStorage.setItem('bingoState', JSON.stringify(state));
         document.getElementById('result').classList.add('hidden');
         document.getElementById('btn-draw').disabled = false;
@@ -596,6 +601,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardCountInput = document.getElementById('cardCount');
     const btnGenerateCards = document.getElementById('btn-generate-cards');
     const btnDirectPrint = document.getElementById('btn-direct-print');
+
+    btnGenerateCards.addEventListener('click', () => {
+        generatePrintCards(cardCountInput.value);
+    });
 
     btnDirectPrint.addEventListener('click', () => {
         const preview = document.getElementById('print-preview');

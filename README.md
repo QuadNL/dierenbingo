@@ -90,9 +90,9 @@ const CONFIG = {
 
 (Requires Web Audio API support)
 
-## 🐾 Dieren (20 totaal)
+## 🐾 Dieren (Instelbaar 20 tot 30)
 
-🐶 Hond, 🐱 Kat, 🐮 Koe, 🐷 Varken, 🐑 Schaap, 🐴 Paard, 🐔 Kip, 🦆 Eend, 🐰 Konijn, 🐭 Muis, 🐘 Olifant, 🦁 Leeuw, 🐒 Aap, 🐻 Beer, 🐊 Krokodil, 🐍 Slang, 🐯 Tijger, 🦓 Zebra, 🦒 Giraf, 🐧 Pinguïn
+Standaard 20 dieren, maar in de instellingen uit te breiden tot maximaal 30 dieren voor een langere bingo (bijv. 1/3 winkans per vakje). De extra dieren worden altijd in een vaste volgorde toegevoegd, zodat geprinte kaarten altijd blijven werken na een herstart!
 
 ## 🔧 Validatie
 
