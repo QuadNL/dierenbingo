@@ -29,6 +29,8 @@
             <section id="history"></section>
             <section id="molen">
                 <div id="draw-display">
+                    <div id="drum-stand"></div>
+                    <div id="drum"></div>
                     <div id="ball" class="hidden"></div>
                     <div id="result" class="hidden">
                         <img id="result-img" src="" alt="">
@@ -122,6 +124,18 @@
             <div class="modal-buttons">
                 <button class="modal-btn modal-btn-confirm" id="modal-btn-reset-yes">Ja, Resetten</button>
                 <button class="modal-btn modal-btn-cancel" id="modal-btn-reset-no">Nee, Annuleren</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Einde Spel -->
+    <div id="modal-game-over" class="modal hidden">
+        <div class="modal-content">
+            <h2>🏁 Einde Spel 🏁</h2>
+            <p>Alle dieren zijn gegrabbeld! Als het goed is heeft iedereen nu BINGO!</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="modal-btn-game-over-new">Nieuw Spel Starten</button>
+                <button class="modal-btn modal-btn-cancel" id="modal-btn-game-over-close">Sluiten</button>
             </div>
         </div>
     </div>

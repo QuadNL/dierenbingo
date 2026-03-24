@@ -2,7 +2,7 @@
 
 // ============ CONFIG ============
 const CONFIG = {
-    ANIM_DURATION: 1500,
+    ANIM_DURATION: 2000,
     SOUND_VOLUME: 0.3,
     NUM_CARDS: 15,
     CARDS_LAYOUT: { rows: 3, cols: 4 },
@@ -84,11 +84,6 @@ function speakAnimalName(name) {
     
     const bgMusic = document.getElementById('background-music');
     
-    // Mute background music during speech
-    if (bgMusic && bgMusicIsPlaying) {
-        bgMusic.volume = 0;
-    }
-    
     speechSynthesis.cancel(); // Cancel any ongoing speech
     
     const utterance = new SpeechSynthesisUtterance(name);
@@ -105,10 +100,17 @@ function speakAnimalName(name) {
         utterance.voice = selectedVoice;
     }
     
-    // Restore bg music to 10% after speech
+    // Restore bg music to configured volume after speech
     utterance.onend = () => {
         if (bgMusic && bgMusicIsPlaying) {
-            bgMusic.volume = 0.1;
+            bgMusic.volume = settings.bgMusicVolume;
+        }
+    };
+    
+    // Fallback voor als de spraak onverhoopt faalt, herstel dan toch de muziek
+    utterance.onerror = () => {
+        if (bgMusic && bgMusicIsPlaying) {
+            bgMusic.volume = settings.bgMusicVolume;
         }
     };
     
@@ -242,6 +244,23 @@ function drawAnimal() {
     if (state.remaining.length === 0) return;
     
     initAudio();
+    
+    // Fade de achtergrondmuziek soepel weg zodra het grabbelen begint (alleen als spraak aan staat)
+    const bgMusic = document.getElementById('background-music');
+    if (settings.speechEnabled && bgMusicIsPlaying && bgMusic) {
+        let currentVol = bgMusic.volume;
+        const step = currentVol / 20; // Bereikt 0 in ongeveer 1 seconde (20 stappen van 50ms)
+        const fadeInterval = setInterval(() => {
+            currentVol -= step;
+            if (currentVol <= 0.01) {
+                bgMusic.volume = 0;
+                clearInterval(fadeInterval);
+            } else {
+                bgMusic.volume = currentVol;
+            }
+        }, 50);
+    }
+
     const btnDraw = document.getElementById('btn-draw');
     const ball = document.getElementById('ball');
     const result = document.getElementById('result');
@@ -267,7 +286,16 @@ function drawAnimal() {
         localStorage.setItem('bingoState', JSON.stringify(state));
         renderBoard();
         
-        if (state.remaining.length > 0) btnDraw.disabled = false;
+        if (state.remaining.length > 0) {
+            btnDraw.disabled = false;
+        } else {
+            // Het allerlaatste dier is getrokken
+            setTimeout(() => {
+                document.getElementById('modal-game-over').classList.remove('hidden');
+                speakGreeting('Alle dieren zijn gegrabbeld! Iedereen heeft nu bingo!');
+                confetti();
+            }, 3500); // Wacht 3,5s zodat de naam van het laatste dier eerst uitgesproken kan worden
+        }
     }, CONFIG.ANIM_DURATION);
 }
 
@@ -408,12 +436,12 @@ document.addEventListener('DOMContentLoaded', () => {
             intro.classList.add('hidden');
             appUi.classList.remove('hidden');
             
-            // Auto-play background music at 10% volume
+            // Auto-play background music at configured volume
             if (bgMusicElement) {
-                bgMusicElement.volume = 0.1;
+                bgMusicElement.volume = settings.bgMusicVolume;
                 bgMusicElement.play().catch(e => console.log('Background music play failed:', e));
                 bgMusicIsPlaying = true;
-                bgMusicVolume = 0.1;
+                bgMusicVolume = settings.bgMusicVolume;
             }
             
             // Check if there's an active game
@@ -594,6 +622,25 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementById('modal-btn-reset-no').addEventListener('click', () => {
         modalReset.classList.add('hidden');
+    });
+    
+    // Modal: Game Over
+    const modalGameOver = document.getElementById('modal-game-over');
+    
+    document.getElementById('modal-btn-game-over-new').addEventListener('click', () => {
+        const existing = tsParticles.domItem(0);
+        if (existing) existing.destroy(); // Stop confetti
+        state = { remaining: [...getActiveAnimals()], drawn: [] };
+        localStorage.setItem('bingoState', JSON.stringify(state));
+        document.getElementById('result').classList.add('hidden');
+        document.getElementById('btn-draw').disabled = false;
+        renderBoard();
+        speakGreeting('Nieuwe bingo ronde wordt gestart, veel succes!');
+        modalGameOver.classList.add('hidden');
+    });
+
+    document.getElementById('modal-btn-game-over-close').addEventListener('click', () => {
+        modalGameOver.classList.add('hidden');
     });
     
     // Modal: Print Cards
