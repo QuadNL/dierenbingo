@@ -1,9 +1,28 @@
 /* Synopsis: Festive layout, history chips, molen, and print styles. */
+/* Mobile-first responsive design with adaptive breakpoints */
+
 :root {
     --bg-color: #fdf6e3;
     --primary: #ff9f43;
     --secondary: #1dd1a1;
     --text: #222f3e;
+    
+    /* Responsive spacing */
+    --spacing-xs: clamp(0.5rem, 1.5vw, 0.75rem);
+    --spacing-sm: clamp(0.75rem, 2vw, 1rem);
+    --spacing-md: clamp(1rem, 3vw, 1.5rem);
+    --spacing-lg: clamp(1.5rem, 4vw, 2rem);
+    
+    /* Responsive font sizes */
+    --font-base: clamp(0.875rem, 2.5vw, 1rem);
+    --font-lg: clamp(1rem, 3vw, 1.2rem);
+    --font-xl: clamp(1.2rem, 4vw, 1.5rem);
+    --font-2xl: clamp(1.5rem, 5vw, 2rem);
+    --font-3xl: clamp(2rem, 8vw, 3.5rem);
+}
+
+html {
+    font-size: 16px;
 }
 
 body {
@@ -16,65 +35,112 @@ body {
     background-position: center;
     background-attachment: fixed;
     color: var(--text);
+    font-size: var(--font-base);
 }
 
 #app-ui {
     max-width: 1000px;
-    margin: 20px auto;
+    margin: var(--spacing-sm) auto;
     background: rgba(255, 255, 255, 0.92);
-    padding: 20px;
+    padding: var(--spacing-md);
     border-radius: 16px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
 header {
     display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     border-bottom: 3px dashed var(--primary);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 #counter {
-    font-size: 1.5rem;
+    font-size: var(--font-lg);
     font-weight: bold;
+    order: -1;
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    width: 100%;
 }
 
 button {
     border: none;
-    padding: 10px 20px;
-    font-size: 1.2rem;
+    padding: clamp(0.6rem, 2vw, 10px) clamp(0.8rem, 3vw, 20px);
+    font-size: clamp(0.8rem, 2.5vw, 1.2rem);
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     color: white;
-    margin-left: 10px;
     transition: opacity 0.2s, transform 0.1s;
+    flex: 1;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 button:hover:not(:disabled) { transform: scale(1.05); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
-#btn-draw { background: var(--primary); padding: 15px 30px; font-size: 1.5rem; width: 100%; margin: 0; }
+
+#btn-draw {
+    background: var(--primary);
+    padding: clamp(12px, 3vw, 15px) clamp(20px, 4vw, 30px);
+    font-size: clamp(1rem, 3.5vw, 1.5rem);
+    width: 100%;
+    margin: 0;
+    flex: none;
+}
+
 #btn-bingo { background: #ee5253; }
 #btn-print { background: var(--secondary); }
 #btn-reset { background: #576574; }
 #btn-bg-music { background: #8e44ad; }
 
+@media (min-width: 601px) {
+    header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    #counter {
+        font-size: var(--font-xl);
+        order: 0;
+        width: auto;
+    }
+    
+    .actions {
+        width: auto;
+        flex-wrap: nowrap;
+    }
+    
+    button {
+        flex: 0 1 auto;
+    }
+}
+
 main {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: var(--spacing-md);
 }
 
 #history {
-    flex: 2;
+    flex: 1;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: var(--spacing-sm);
     background: #f1f2f6;
-    padding: 15px;
+    padding: var(--spacing-md);
     border-radius: 12px;
-    min-height: 150px;
+    min-height: 120px;
     align-content: flex-start;
 }
 
@@ -82,12 +148,12 @@ main {
     background: white;
     border: 2px solid var(--primary);
     border-radius: 20px;
-    padding: 8px 12px;
+    padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-xs);
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: clamp(0.8rem, 2vw, 1.1rem);
     color: var(--primary);
     animation: slideIn 0.3s ease-out;
 }
@@ -97,7 +163,7 @@ main {
 }
 
 .chip-icon {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
 }
 
 @keyframes slideIn {
@@ -109,11 +175,29 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: var(--spacing-md);
+}
+
+@media (min-width: 601px) {
+    main {
+        flex-direction: row;
+    }
+    
+    #history {
+        flex: 2;
+    }
+    
+    #molen {
+        flex: 1;
+    }
 }
 
 #draw-display {
-    height: 250px;
+    height: clamp(200px, 60vw, 250px);
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 250px;
+    margin: 0 auto;
     background: white;
     border: 4px solid var(--primary);
     border-radius: 50%;
@@ -127,8 +211,8 @@ main {
 .hidden { display: none !important; }
 
 #ball {
-    width: 60px;
-    height: 60px;
+    width: clamp(40px, 10vw, 60px);
+    height: clamp(40px, 10vw, 60px);
     background: radial-gradient(circle, #f1c40f, #e67e22);
     border-radius: 50%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -142,14 +226,27 @@ main {
     100% { transform: translate(0, 0) rotate(720deg) scale(0); opacity: 0; }
 }
 
-#result { text-align: center; animation: popIn 0.3s ease-out; }
+#result { 
+    text-align: center; 
+    animation: popIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 #result img { 
-    width: 120px; 
-    height: 120px;
+    width: clamp(80px, 20vw, 120px);
+    height: clamp(80px, 20vw, 120px);
     filter: drop-shadow(0 0 20px rgba(255, 159, 67, 0.8)) drop-shadow(0 0 40px rgba(29, 209, 161, 0.6));
     animation: glow 1.5s ease-in-out infinite;
 }
-#result h2 { margin: 10px 0 0 0; font-size: 1.5rem; color: var(--primary); }
+
+#result h2 { 
+    margin: var(--spacing-sm) 0 0 0;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    color: var(--primary);
+}
 
 @keyframes popIn {
     0% { transform: scale(0); opacity: 0; }
@@ -195,23 +292,24 @@ main {
     animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     position: relative;
     z-index: 10;
+    padding: var(--spacing-md);
 }
 
 .intro-title {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
+    font-size: var(--font-3xl);
+    margin-bottom: var(--spacing-md);
     animation: slideUp 0.6s ease-out;
 }
 
 .intro-text {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
+    font-size: var(--font-2xl);
+    margin-bottom: var(--spacing-lg);
     animation: slideUp 0.6s ease-out 0.2s both;
 }
 
 .intro-btn {
-    font-size: 1.3rem;
-    padding: 15px 40px;
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    padding: clamp(10px, 2.5vw, 15px) clamp(30px, 5vw, 40px);
     border-radius: 12px;
     border: none;
     background: white;
@@ -220,6 +318,7 @@ main {
     cursor: pointer;
     animation: slideUp 0.6s ease-out 0.4s both;
     transition: transform 0.2s;
+    min-height: 44px;
 }
 
 .intro-btn:hover {
@@ -260,6 +359,7 @@ main {
     align-items: center;
     z-index: 5000;
     animation: fadeIn 0.3s ease-out;
+    padding: var(--spacing-sm);
 }
 
 .modal.hidden {
@@ -268,45 +368,52 @@ main {
 
 .modal-content {
     background: white;
-    padding: 30px 40px;
+    padding: clamp(20px, 4vw, 40px);
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-width: 90vw;
+    width: 100%;
     max-width: 400px;
     text-align: center;
     animation: popIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-content.modal-large {
-    max-width: 500px;
+    max-width: min(90vw, 500px);
     text-align: left;
 }
 
 .modal-content h2 {
-    margin: 0 0 20px 0;
-    font-size: 1.5rem;
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
     color: var(--primary);
 }
 
 .modal-content p {
-    margin: 0 0 25px 0;
-    font-size: 1.1rem;
+    margin: 0 0 var(--spacing-lg) 0;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
     color: var(--text);
+    line-height: 1.5;
 }
 
 .modal-buttons {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: var(--spacing-sm);
     justify-content: center;
 }
 
 .modal-btn {
-    padding: 12px 25px;
-    font-size: 1rem;
+    padding: clamp(10px, 2.5vw, 12px) clamp(20px, 4vw, 25px);
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     border-radius: 8px;
     border: none;
     cursor: pointer;
     font-weight: bold;
     transition: transform 0.1s;
+    min-height: 44px;
 }
 
 .modal-btn:hover {
@@ -323,26 +430,42 @@ main {
     color: var(--text);
 }
 
+@media (min-width: 601px) {
+    .modal {
+        padding: 0;
+    }
+    
+    .modal-buttons {
+        flex-direction: row;
+    }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 /* ============ SETTINGS ============ */
 .setting-group {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
     border-bottom: 1px solid #eee;
 }
 
 .setting-group h3 {
-    margin: 0 0 12px 0;
+    margin: 0 0 var(--spacing-sm) 0;
     color: var(--primary);
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
 }
 
 .toggle-label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
     cursor: pointer;
     font-weight: 500;
     user-select: none;
+    font-size: clamp(0.9rem, 2vw, 0.95rem);
 }
 
 .toggle-label input[type="checkbox"] {
@@ -350,30 +473,34 @@ main {
     height: 20px;
     cursor: pointer;
     accent-color: var(--primary);
+    flex-shrink: 0;
 }
 
 .setting-group label {
     display: block;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
     color: var(--text);
-    margin-top: 8px;
+    margin-top: var(--spacing-sm);
 }
 
-.setting-group select {
+.setting-group select,
+.setting-group input[type="range"] {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    font-size: 0.95rem;
+    padding: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
     border: 1px solid #dfe4ea;
     border-radius: 6px;
     background: white;
+    box-sizing: border-box;
 }
 
 /* ============ MUSIC TOGGLE ============ */
 #btn-music-toggle {
     background: #8e44ad;
-    padding: 10px 15px;
-    font-size: 1.3rem;
-    min-width: 45px;
-    margin-left: 0;
+    padding: clamp(8px, 2vw, 10px) clamp(12px, 2.5vw, 15px);
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    min-width: 44px;
+    min-height: 44px;
+    flex-shrink: 0;
 }
