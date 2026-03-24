@@ -1,6 +1,12 @@
-# Dieren Bingo - Lokale Frontend Game
+# Dieren Bingo Spel
 
-Volledige Dieren Bingo applicatie voor kinderfeestjes, gebouwd met Vanilla HTML/CSS/JS. **100% offline** - geen internet nodig!
+Volledige Dieren Bingo applicatie voor kinderfeestjes, gebouwd met Vanilla HTML/CSS/JS. Speel direct online via GitHub Pages of download de bestanden om het **100% offline** te gebruiken.
+
+## 🚀 Online Spelen (Aanbevolen)
+
+Je kunt het spel direct in je browser spelen, zonder iets te installeren.
+
+**[➡️ Speel Dierenbingo via GitHub Pages](https://ebeverdam.github.io/dierenbingo/)**
 
 ## 📋 Inhoud
 
@@ -9,7 +15,7 @@ Volledige Dieren Bingo applicatie voor kinderfeestjes, gebouwd met Vanilla HTML/
 - **app.js** → Core game logic (state, audio, UI updates)
 - **style.css** → Responsive design & print styles
 
-## 🎮 Hoe gebruiken
+## 🎮 Lokaal Gebruiken (Offline)
 
 ### Trekking (Spelen)
 1. Open `index.html` in een moderne browser (Edge, Chrome, Firefox)
