@@ -3,7 +3,7 @@
 // ============ CONFIG ============
 const CONFIG = {
     ANIM_DURATION: 1500,
-    SOUND_VOLUME: 0.5,
+    SOUND_VOLUME: 0.3,
     NUM_CARDS: 15,
     CARDS_LAYOUT: { rows: 3, cols: 4 },
     LOCALE: 'nl',
@@ -516,6 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('result').classList.add('hidden');
         document.getElementById('btn-draw').disabled = false;
         renderBoard();
+        speakGreeting('Nieuwe bingo ronde wordt gestart, veel succes!');
         modalBingo.classList.add('hidden');
     });
     
@@ -527,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('result').classList.add('hidden');
         document.getElementById('btn-draw').disabled = false;
         renderBoard();
+        speakGreeting('Nieuwe bingo ronde wordt gestart, veel succes!');
         modalReset.classList.add('hidden');
     });
     
