@@ -278,11 +278,32 @@ function drawAnimal() {
         ball.classList.add('hidden');
         document.getElementById('result-img').src = animal.svg;
         document.getElementById('result-name').innerText = animal.name;
-        result.classList.remove('hidden');
+        
+        state.drawn.push(animal);
         
         playSound('ding');
-        speakAnimalName(animal.name);
-        state.drawn.push(animal);
+        
+        let factToSpeak = null;
+        // Elke 3e beurt (3, 6, 9, etc) checken of er een feitje beschikbaar is
+        if (state.drawn.length % 3 === 0 && animal.facts && animal.facts.length > 0) {
+            factToSpeak = animal.facts[Math.floor(Math.random() * animal.facts.length)];
+        }
+        
+        const factEl = document.getElementById('result-fact');
+        if (factToSpeak) {
+            factEl.innerText = "💡 " + factToSpeak;
+            factEl.classList.remove('hidden');
+            
+            // Freek Vonk enthousiasme toevoegen
+            const freekIntro = ["Wist je dat...", "Super gaaf! Wist je dat...", "Holy moly! Wist je dat..."][Math.floor(Math.random() * 3)];
+            speakAnimalName(`${animal.name}! ${freekIntro} ${factToSpeak}`);
+        } else {
+            factEl.classList.add('hidden');
+            speakAnimalName(animal.name);
+        }
+        
+        result.classList.remove('hidden');
+        
         localStorage.setItem('bingoState', JSON.stringify(state));
         renderBoard();
         
@@ -290,11 +311,13 @@ function drawAnimal() {
             btnDraw.disabled = false;
         } else {
             // Het allerlaatste dier is getrokken
+            // Geef iets meer tijd als er een feitje wordt opgelezen
+            const gameOverTimeout = factToSpeak ? 8500 : 3500; 
             setTimeout(() => {
                 document.getElementById('modal-game-over').classList.remove('hidden');
                 speakGreeting('Alle dieren zijn gegrabbeld! Iedereen heeft nu bingo!');
                 confetti();
-            }, 3500); // Wacht 3,5s zodat de naam van het laatste dier eerst uitgesproken kan worden
+            }, gameOverTimeout);
         }
     }, CONFIG.ANIM_DURATION);
 }
