@@ -1,0 +1,379 @@
+/* Synopsis: Festive layout, history chips, molen, and print styles. */
+:root {
+    --bg-color: #fdf6e3;
+    --primary: #ff9f43;
+    --secondary: #1dd1a1;
+    --text: #222f3e;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    background-image: url('images/bingo-16-9gamewallpaper.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text);
+}
+
+#app-ui {
+    max-width: 1000px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px dashed var(--primary);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+#counter {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+button {
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    margin-left: 10px;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+button:hover:not(:disabled) { transform: scale(1.05); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+#btn-draw { background: var(--primary); padding: 15px 30px; font-size: 1.5rem; width: 100%; margin: 0; }
+#btn-bingo { background: #ee5253; }
+#btn-print { background: var(--secondary); }
+#btn-reset { background: #576574; }
+#btn-bg-music { background: #8e44ad; }
+
+main {
+    display: flex;
+    gap: 20px;
+}
+
+#history {
+    flex: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #f1f2f6;
+    padding: 15px;
+    border-radius: 12px;
+    min-height: 150px;
+    align-content: flex-start;
+}
+
+.chip {
+    background: white;
+    border: 2px solid var(--primary);
+    border-radius: 20px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--primary);
+    animation: slideIn 0.3s ease-out;
+}
+
+.chip-num {
+    display: none;
+}
+
+.chip-icon {
+    font-size: 2rem;
+}
+
+@keyframes slideIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#molen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#draw-display {
+    height: 250px;
+    background: white;
+    border: 4px solid var(--primary);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+#ball {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, #f1c40f, #e67e22);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.rolling { animation: roll 1.5s cubic-bezier(0.25, 0.1, 0.25, 1); }
+
+@keyframes roll {
+    0% { transform: translate(-100px, -100px) rotate(0deg); opacity: 1; }
+    50% { transform: translate(0, 0) rotate(360deg) scale(1.5); opacity: 1; }
+    100% { transform: translate(0, 0) rotate(720deg) scale(0); opacity: 0; }
+}
+
+#result { text-align: center; animation: popIn 0.3s ease-out; }
+#result img { 
+    width: 120px; 
+    height: 120px;
+    filter: drop-shadow(0 0 20px rgba(255, 159, 67, 0.8)) drop-shadow(0 0 40px rgba(29, 209, 161, 0.6));
+    animation: glow 1.5s ease-in-out infinite;
+}
+#result h2 { margin: 10px 0 0 0; font-size: 1.5rem; color: var(--primary); }
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 159, 67, 0.8)) drop-shadow(0 0 40px rgba(29, 209, 161, 0.6)); }
+    50% { filter: drop-shadow(0 0 30px rgba(255, 159, 67, 1)) drop-shadow(0 0 60px rgba(29, 209, 161, 0.8)); }
+}
+
+/* ============ INTRO ============ */
+.intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('images/bingo-16-9HDwallpaper.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+.intro-content {
+    text-align: center;
+    color: white;
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    z-index: 10;
+}
+
+.intro-title {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    animation: slideUp 0.6s ease-out;
+}
+
+.intro-text {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+.intro-btn {
+    font-size: 1.3rem;
+    padding: 15px 40px;
+    border-radius: 12px;
+    border: none;
+    background: white;
+    color: var(--primary);
+    font-weight: bold;
+    cursor: pointer;
+    animation: slideUp 0.6s ease-out 0.4s both;
+    transition: transform 0.2s;
+}
+
+.intro-btn:hover {
+    transform: scale(1.1);
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes fadeOutAudio {
+    0% { volume: 1; }
+    100% { volume: 0; }
+}
+
+/* ============ MODALS ============ */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-width: 400px;
+    text-align: center;
+    animation: popIn 0.3s ease-out;
+}
+
+.modal-content.modal-large {
+    max-width: 500px;
+    text-align: left;
+}
+
+.modal-content h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.modal-content p {
+    margin: 0 0 25px 0;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s;
+}
+
+.modal-btn:hover {
+    transform: scale(1.05);
+}
+
+.modal-btn-confirm {
+    background: var(--primary);
+    color: white;
+}
+
+.modal-btn-cancel {
+    background: #dfe4ea;
+    color: var(--text);
+}
+
+/* ============ SETTINGS ============ */
+.setting-group {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.setting-group h3 {
+    margin: 0 0 12px 0;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    user-select: none;
+}
+
+.toggle-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.setting-group label {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-top: 8px;
+}
+
+.setting-group select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    font-size: 0.95rem;
+    border: 1px solid #dfe4ea;
+    border-radius: 6px;
+    background: white;
+}
+
+/* ============ MUSIC TOGGLE ============ */
+#btn-music-toggle {
+    background: #8e44ad;
+    padding: 10px 15px;
+    font-size: 1.3rem;
+    min-width: 45px;
+    margin-left: 0;
+}

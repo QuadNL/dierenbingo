@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dieren Bingo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="intro" class="intro">
+        <div class="intro-content">
+            <h1 class="intro-title">🎉 Dierenbingo 🎉</h1>
+            <p class="intro-text">Klaar voor het spel?</p>
+            <button id="btn-start" class="intro-btn">Start Spel</button>
+        </div>
+    </div>
+    <div id="app-ui" class="hidden">
+        <header>
+            <div id="counter">Resterend: 20</div>
+            <div class="actions">
+                <button id="btn-music-toggle" title="Muziek uit/aan">🔊</button>
+                <button id="btn-settings">⚙️ Instellingen</button>
+                <button id="btn-bingo">BINGO!</button>
+                <button id="btn-print">Print Kaarten</button>
+                <button id="btn-reset">Reset Spel</button>
+            </div>
+        </header>
+        <main>
+            <section id="history"></section>
+            <section id="molen">
+                <div id="draw-display">
+                    <div id="ball" class="hidden"></div>
+                    <div id="result" class="hidden">
+                        <img id="result-img" src="" alt="">
+                        <h2 id="result-name"></h2>
+                    </div>
+                </div>
+                <button id="btn-draw" autofocus>Trek Dier</button>
+            </section>
+        </main>
+    </div>
+    <audio id="bingo-sound" src="sounds/bingo.mp3"></audio>
+    <audio id="intro-music" src="sounds/intro-music.mp3" loop autoplay></audio>
+    <audio id="background-music" src="sounds/intro-music.mp3" loop></audio>
+    
+    <!-- Modal: Instellingen -->
+    <div id="modal-settings" class="modal hidden">
+        <div class="modal-content modal-large">
+            <h2>⚙️ Instellingen</h2>
+            
+            <!-- Geluid Toggle -->
+            <div class="setting-group">
+                <h3>Geluid</h3>
+                <label class="toggle-label">
+                    <input type="checkbox" id="setting-sound-enabled" checked>
+                    <span>Geluid ingeschakeld</span>
+                </label>
+            </div>
+            
+            <!-- Muziek Controls -->
+            <div class="setting-group">
+                <h3>Achtergrondmuziek</h3>
+                <label style="display: block; margin-top: 10px;">Volume: <span id="bg-vol-display">10%</span></label>
+                <input type="range" id="setting-bg-volume" min="0" max="100" value="10" style="width: 100%; margin-top: 5px;">
+            </div>
+            
+            <!-- Speech Controls -->
+            <div class="setting-group">
+                <h3>Spraak</h3>
+                <label class="toggle-label">
+                    <input type="checkbox" id="setting-speech-enabled" checked>
+                    <span>Dieren namen uitspreken</span>
+                </label>
+                
+                <label style="display: block; margin-top: 10px;">Volume: <span id="speech-vol-display">100%</span></label>
+                <input type="range" id="setting-speech-volume" min="0" max="100" value="100" style="width: 100%; margin-top: 5px;">
+            </div>
+            
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button class="modal-btn modal-btn-cancel" id="modal-btn-close-settings">Sluiten</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Spel Hervatten of Nieuw Spel -->
+    <div id="modal-resume" class="modal hidden">
+        <div class="modal-content">
+            <h2>Bingo</h2>
+            <p>Je hebt een actieve bingo ronde. Wat wil je doen?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="modal-btn-resume">Hervatten</button>
+                <button class="modal-btn modal-btn-cancel" id="modal-btn-new-game-start">Nieuw Spel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Doorspelen? -->
+    <div id="modal-bingo" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎉 BINGO! 🎉</h2>
+            <p>Doorspelen?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="modal-btn-continue">Ja, Doorspelen</button>
+                <button class="modal-btn modal-btn-cancel" id="modal-btn-new-game">Nee, Nieuw Spel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Spel Resetten? -->
+    <div id="modal-reset" class="modal hidden">
+        <div class="modal-content">
+            <h2>Spel Resetten?</h2>
+            <p>Weet je het zeker?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="modal-btn-reset-yes">Ja, Resetten</button>
+                <button class="modal-btn modal-btn-cancel" id="modal-btn-reset-no">Nee, Annuleren</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

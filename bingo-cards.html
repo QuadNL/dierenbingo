@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Kaarten</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: white; }
+        #print-area { display: block; }
+        
+        .print-card {
+            width: 190mm;
+            height: 128mm;
+            border: 3px solid #000;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4mm;
+            padding: 8mm;
+            box-sizing: border-box;
+            page-break-after: always;
+            font-family: sans-serif;
+            background: white;
+            position: relative;
+        }
+        
+        .print-card:last-child { page-break-after: avoid; }
+        
+        .print-cell {
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fdf6e3;
+            overflow: hidden;
+        }
+        
+        .print-cell img {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 3px;
+        }
+        
+        .print-cell .emoji {
+            font-size: 48px;
+            margin-bottom: 3px;
+            display: block;
+        }
+        
+        .print-cell span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #222;
+            text-align: center;
+            line-height: 1.1;
+            padding: 0 2px;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 2mm;
+            right: 3mm;
+            font-size: 10px;
+            color: #999;
+            font-weight: bold;
+        }
+        
+        .star-cell { background: #fff3cd; border-color: #ffa500; }
+        .star-cell span { color: #ff6b00; }
+        
+        .wildcard-cell { background: #fff3cd; border-color: #ffa500; font-weight: bold; }
+        
+        @media print {
+            body { margin: 0; padding: 0; }
+            .print-card { margin: 0; border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="print-area"></div>
+    <script>
+        const ANIMALS = [
+            { id: 'hond', name: 'Hond', icon: '🐶' },
+            { id: 'kat', name: 'Kat', icon: '🐱' },
+            { id: 'koe', name: 'Koe', icon: '🐮' },
+            { id: 'varken', name: 'Varken', icon: '🐷' },
+            { id: 'schaap', name: 'Schaap', icon: '🐑' },
+            { id: 'paard', name: 'Paard', icon: '🐴' },
+            { id: 'kip', name: 'Kip', icon: '🐔' },
+            { id: 'eend', name: 'Eend', icon: '🦆' },
+            { id: 'konijn', name: 'Konijn', icon: '🐰' },
+            { id: 'muis', name: 'Muis', icon: '🐭' },
+            { id: 'olifant', name: 'Olifant', icon: '🐘' },
+            { id: 'leeuw', name: 'Leeuw', icon: '🦁' },
+            { id: 'aap', name: 'Aap', icon: '🐒' },
+            { id: 'beer', name: 'Beer', icon: '🐻' },
+            { id: 'krokodil', name: 'Krokodil', icon: '🐊' },
+            { id: 'slang', name: 'Slang', icon: '🐍' },
+            { id: 'tijger', name: 'Tijger', icon: '🐯' },
+            { id: 'zebra', name: 'Zebra', icon: '🦓' },
+            { id: 'giraf', name: 'Giraf', icon: '🦒' },
+            { id: 'pinguin', name: 'Pinguïn', icon: '🐧' },
+        ].map(a => ({
+            ...a,
+            svg: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="15" fill="%23fdf6e3" stroke="%23ff9f43" stroke-width="2"/><text x="50" y="70" font-size="60" text-anchor="middle">${a.icon}</text></svg>`
+        }));
+        
+        function generateCards() {
+            const area = document.getElementById('print-area');
+            let html = '';
+            
+            const wildcard = {
+                name: 'WILDCARD',
+                icon: '⭐',
+                isWildcard: true
+            };
+            
+            for (let cardNum = 0; cardNum < 15; cardNum++) {
+                // Pick 11 random unique animals for this card (wildcard takes first slot)
+                const shuffled = [...ANIMALS].sort(() => 0.5 - Math.random());
+                const cardAnimals = shuffled.slice(0, 11);
+                
+                html += `<div class="print-card">`;
+                html += `<div class="card-number">Kaart ${cardNum + 1}</div>`;
+                
+                // Add wildcard as first cell
+                html += `<div class="print-cell wildcard-cell">
+                    <span class="emoji">${wildcard.icon}</span>
+                    <span>${wildcard.name}</span>
+                </div>`;
+                
+                // Add remaining 11 animals
+                cardAnimals.forEach(a => {
+                    html += `<div class="print-cell">
+                        <span class="emoji">${a.icon}</span>
+                        <span>${a.name}</span>
+                    </div>`;
+                });
+                
+                html += `</div>`;
+            }
+            
+            area.innerHTML = html;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            generateCards();
+            // Auto-open print dialog after a short delay
+            setTimeout(() => window.print(), 500);
+        });
+    </script>
+</body>
+</html>
