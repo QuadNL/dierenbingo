@@ -6,7 +6,7 @@ Volledige Dieren Bingo applicatie voor kinderfeestjes, gebouwd met Vanilla HTML/
 
 Je kunt het spel direct in je browser spelen, zonder iets te installeren.
 
-**[➡️ Speel Dierenbingo via GitHub Pages](https://ebeverdam.github.io/dierenbingo/)**
+**[➡️ Speel Dierenbingo via GitHub Pages](https://QuadNL.github.io/dierenbingo/)**
 
 ## 📋 Inhoud
 
