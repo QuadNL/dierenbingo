@@ -214,7 +214,7 @@ function confetti() {
     const ctx = canvas.getContext('2d');
     const particles = [];
     
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 250; i++) {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height - canvas.height,
@@ -465,19 +465,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-bingo').addEventListener('click', () => {
         initAudio();
         const bingoAudio = document.getElementById('bingo-sound');
-        if (bingoAudio && settings.soundEnabled) bingoAudio.play();
         confetti();
         
-        // Speak bingo message
-        setTimeout(() => {
+        const showBingoModalAndSpeak = () => {
             speakBingo();
-        }, 500);
-        
-        // Show BINGO modal
-        const modal = document.getElementById('modal-bingo');
-        setTimeout(() => {
-            modal.classList.remove('hidden');
-        }, 1500);
+            setTimeout(() => {
+                document.getElementById('modal-bingo').classList.remove('hidden');
+            }, 1000);
+        };
+
+        if (bingoAudio && settings.soundEnabled) {
+            bingoAudio.addEventListener('ended', showBingoModalAndSpeak, { once: true });
+            bingoAudio.play().catch(() => showBingoModalAndSpeak());
+        } else {
+            showBingoModalAndSpeak();
+        }
     });
     
     document.getElementById('btn-reset').addEventListener('click', () => {

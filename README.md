@@ -11,7 +11,6 @@ Je kunt het spel direct in je browser spelen, zonder iets te installeren.
 ## 📋 Inhoud
 
 - **index.html** → Trekking-UI (trekken van dieren)
-- **bingo-cards.html** → Printbare bingo kaarten (15 kaarten × 3×4 grid)
 - **app.js** → Core game logic (state, audio, UI updates)
 - **style.css** → Responsive design & print styles
 
@@ -19,15 +18,15 @@ Je kunt het spel direct in je browser spelen, zonder iets te installeren.
 
 ### Trekking (Spelen)
 1. Open `index.html` in een moderne browser (Edge, Chrome, Firefox)
-2. Klik op **"Trek Dier"** knop (of druk op Spatie/Enter)
+2. Klik op **"Grabbelen!"** knop (of druk op Spatie/Enter)
 3. Wachtend op bal-animatie → dier wordt getrokken en getoond
 4. Getrokken dieren verschijnen als badges in de geschiedenis
 5. Geluiden + confetti wanneer BINGO! wordt geroepen
 
 ### Kaarten Printen
-1. Klik op **"Print Kaarten"** → gaat naar `bingo-cards.html`
-2. **15 unieke kaarten** worden gegenereerd (elk 3 rijen × 4 kolommen)
-3. Printdialoog opent automatisch
+1. Klik op **"Print Kaarten"** → opent de print instellingen modal
+2. Selecteer het gewenste aantal kaarten en klik op **"Direct Afdrukken"**
+3. Printdialoog van de browser opent automatisch
 4. Druk af op **A5 liggend** formaat (optimaal op standaardprinter)
 
 ## ⚙️ Configuratie
@@ -79,7 +78,7 @@ const CONFIG = {
 - Teller reset na "Spel Resetten"
 
 ✅ **Toetsenbord Support:**
-- **Spatie/Enter** → Trek dier
+- **Spatie/Enter** → Grabbelen!
 - Browser-standaard shortcuts werken
 
 ## 📱 Browser Compatibiliteit
@@ -107,7 +106,7 @@ const CONFIG = {
 
 - **Geluidsvolume:** Controleer vooraf in een rustige omgeving. TV-speakers zijn soms luid!
 - **Print quality:** Test 1 kaart eerst; controleer of de emoji's scherp afdrukken
-- **A5 landscape:** Sommige printers eisen rand-marges; configuratie in `bingo-cards.html` kan worden aangepast
+- **A5 landscape:** Sommige printers eisen rand-marges; configuratie kan via de printerinstellingen of via `style.css` worden aangepast
 - **Toetsenbord:** Gebruik Spatie op externe TV-afstandsbediening (muis/trackpad kan nuttig zijn als backup)
 
 ## 📝 Licentie & Krediet
