@@ -593,22 +593,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalPrintCards = document.getElementById('modal-print-cards');
     const cardCountInput = document.getElementById('cardCount');
     const btnGenerateCards = document.getElementById('btn-generate-cards');
-    const btnDirectPrint = document.getElementById('btn-direct-print'); // Deze moet blijven staan
-
-    btnGenerateCards.addEventListener('click', () => {
-        generatePrintCards(cardCountInput.value);
-    });
+    const btnDirectPrint = document.getElementById('btn-direct-print');
 
     btnDirectPrint.addEventListener('click', () => {
         const preview = document.getElementById('print-preview');
         
-        // Alleen genereren als de preview nog leeg is
+        // Alleen een nieuwe set genereren als de preview nog leeg is
         if (preview.children.length === 0) {
-            generatePrintCards(cardCountInput.value);
+            generatePrintCards(document.getElementById('cardCount').value);
         }
         
-        // Direct het printvenster openen zonder de set te verversen
-        setTimeout(() => window.print(), 200);
+        // Open het printvenster met de huidige preview
+        setTimeout(() => {
+            window.print();
+        }, 250);
     });
     
     cardCountInput.addEventListener('input', () => {

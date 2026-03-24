@@ -580,99 +580,57 @@ main {
 }
 
 @media print {
-    /* 1. Verberg ALLES van de normale interface */
-    body * {
-        visibility: hidden;
+    /* 1. Verberg de volledige interface en achtergrond */
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: none !important;
     }
 
-    /* 2. Maak alleen de print-modal en de kaarten zichtbaar */
-    #modal-print-cards, 
-    #modal-print-cards *,
-    #print-preview, 
-    #print-preview * {
-        visibility: visible;
+    body > *:not(#modal-print-cards) {
+        display: none !important;
     }
 
-    /* 3. Positioneer de kaarten bovenaan de fysieke pagina */
+    /* 2. Zorg dat de modal en preview zichtbaar zijn */
     #modal-print-cards {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
+        display: block !important;
         background: white !important;
-        margin: 0;
-        padding: 0;
+        visibility: visible !important;
     }
 
-    /* 4. Verberg de modal-knoppen en titels tijdens het printen */
+    #modal-print-cards * {
+        visibility: visible !important;
+    }
+
+    /* 3. Verberg knoppen, titels en controls in de modal */
     .modal-content h2,
     .modal-buttons,
-    #modal-print-cards > div:first-of-type,
+    #modal-print-cards > .modal-content > div:first-of-type,
     button {
         display: none !important;
     }
 
-    /* 5. Optimaliseer de pagina-instellingen */
+    /* 4. Layout van de pagina's */
+    #print-preview {
+        display: block !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+
+    .print-page {
+        width: 297mm;
+        height: 210mm;
+        page-break-after: always;
+        border: none !important;
+        margin: 0 !important;
+    }
+
     @page {
         size: A4 landscape;
         margin: 0;
-    }
-
-    body {
-        background: none !important; /* Verbergt de feest-wallpaper */
-    }
-}@media print {
-    #modal-print-cards {
-        position: static;
-        background: white !important;
-        display: block !important;
-        z-index: auto;
-    }
-    
-    .modal {
-        display: none;
-    }
-    
-    .modal-content {
-        padding: 0;
-        max-width: 100%;
-        box-shadow: none;
-        border: none;
-    }
-    
-    .modal-content h2,
-    .modal-content > div:first-of-type,
-    .modal-buttons {
-        display: none !important;
-    }
-    
-    #print-preview {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0;
-        padding: 0;
-        border: none;
-        background: white;
-        overflow: visible;
-        flex: none;
-    }
-    
-    .print-page {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 297 / 210;
-        page-break-after: always;
-        margin: 0;
-        border: none;
-        box-shadow: none;
-    }
-    
-    .print-page:last-child {
-        page-break-after: avoid;
-    }
-    
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
     }
 }
