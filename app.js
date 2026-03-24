@@ -286,9 +286,62 @@ function drawAnimal() {
     }, CONFIG.ANIM_DURATION);
 }
 
+// Generate print cards for modal
+function generatePrintCards(numCards) {
+    const preview = document.getElementById('print-preview');
+    const status = document.getElementById('cardStatus');
+    const wildcard = { name: 'WILDCARD', icon: '⭐', isWildcard: true };
+    
+    // Validate input
+    numCards = Math.max(4, Math.min(100, parseInt(numCards) || 4));
+    numCards = Math.ceil(numCards / 4) * 4;
+    
+    let html = '';
+    let cardIndex = 0;
+    
+    // Generate pages with 4 cards each (2x2 grid)
+    for (let pageNum = 0; cardIndex < numCards; pageNum++) {
+        html += '<div class="print-page">';
+        
+        // 4 cards per page
+        for (let cardInPage = 0; cardInPage < 4 && cardIndex < numCards; cardInPage++) {
+            cardIndex++;
+            
+            const shuffled = [...ANIMALS].sort(() => 0.5 - Math.random());
+            const cardAnimals = shuffled.slice(0, 11);
+            
+            html += `<div class="print-card">`;
+            html += `<div class="print-card-number">${cardIndex}</div>`;
+            
+            // Wildcard first
+            html += `<div class="print-cell wildcard-cell">
+                <div class="print-cell-emoji">${wildcard.icon}</div>
+                <div class="print-cell-text">${wildcard.name}</div>
+            </div>`;
+            
+            // Animals
+            cardAnimals.forEach(a => {
+                html += `<div class="print-cell">
+                    <div class="print-cell-emoji">${a.icon}</div>
+                    <div class="print-cell-text">${a.name}</div>
+                </div>`;
+            });
+            
+            html += `</div>`;
+        }
+        
+        html += '</div>';
+    }
+    
+    preview.innerHTML = html;
+    status.textContent = `${numCards} kaarten gegenereerd (${Math.ceil(numCards / 4)} A4 pagina's)`;
+}
+
 // Placeholder for print button
 function preparePrint() {
-    window.location.href = 'bingo-cards.html';
+    const modalPrintCards = document.getElementById('modal-print-cards');
+    modalPrintCards.classList.remove('hidden');
+    generatePrintCards(document.getElementById('cardCount').value);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -534,6 +587,29 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementById('modal-btn-reset-no').addEventListener('click', () => {
         modalReset.classList.add('hidden');
+    });
+    
+    // Modal: Print Cards
+    const modalPrintCards = document.getElementById('modal-print-cards');
+    const cardCountInput = document.getElementById('cardCount');
+    const btnGenerateCards = document.getElementById('btn-generate-cards');
+    const btnDirectPrint = document.getElementById('btn-direct-print');
+    
+    btnGenerateCards.addEventListener('click', () => {
+        generatePrintCards(cardCountInput.value);
+    });
+    
+    btnDirectPrint.addEventListener('click', () => {
+        generatePrintCards(cardCountInput.value);
+        setTimeout(() => window.print(), 500);
+    });
+    
+    cardCountInput.addEventListener('input', () => {
+        generatePrintCards(cardCountInput.value);
+    });
+    
+    document.getElementById('modal-btn-close-cards').addEventListener('click', () => {
+        modalPrintCards.classList.add('hidden');
     });
     
     // Keyboard support

@@ -118,6 +118,29 @@
         </div>
     </div>
     
+    <!-- Modal: Bingo Kaarten Afdrukken -->
+    <div id="modal-print-cards" class="modal hidden">
+        <div class="modal-content modal-large" style="max-width: 95vw; max-height: 95vh; display: flex; flex-direction: column;">
+            <h2>🎴 Bingo Kaarten Afdrukken</h2>
+            
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <label for="cardCount" style="margin: 0; font-weight: 600;">Aantal kaarten:</label>
+                    <input type="number" id="cardCount" min="4" max="100" value="4" step="4" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; width: 100px;">
+                </div>
+                <button id="btn-generate-cards" style="background: #ff9f43; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; cursor: pointer;">Genereer Preview</button>
+                <button id="btn-direct-print" style="background: #1dd1a1; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; cursor: pointer;">🖨️ Direct Afdrukken</button>
+                <span id="cardStatus" style="margin-left: auto; color: #666; font-size: 0.9rem; align-self: center;"></span>
+            </div>
+            
+            <div id="print-preview" style="flex: 1; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9; padding: 1rem;"></div>
+            
+            <div class="modal-buttons" style="margin-top: 1rem;">
+                <button class="modal-btn modal-btn-cancel" id="modal-btn-close-cards">Sluiten</button>
+            </div>
+        </div>
+    </div>
+    
     <script src="app.js"></script>
 </body>
 </html>
