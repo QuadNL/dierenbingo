@@ -602,6 +602,19 @@ main {
         visibility: visible !important;
     }
 
+    /* Overschrijf inline stijlen die de weergave 'vierkant' of beperkt maken */
+    #modal-print-cards .modal-content {
+        max-width: none !important;
+        max-height: none !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: block !important;
+    }
+
     #modal-print-cards * {
         visibility: visible !important;
     }
@@ -619,14 +632,31 @@ main {
         display: block !important;
         padding: 0 !important;
         border: none !important;
+        overflow: visible !important; /* Zorg dat er geen onzichtbare scrollbar is */
+        height: auto !important;
     }
 
     .print-page {
-        width: 297mm;
-        height: 210mm;
+        width: 100% !important;
+        height: 98vh !important; /* Vult de printpagina evenredig in de hoogte in */
+        max-width: none !important;
+        aspect-ratio: auto !important; /* Voorkom de vierkante beeldscherm-verhouding */
         page-break-after: always;
+        page-break-inside: avoid;
         border: none !important;
         margin: 0 !important;
+        padding: 10mm !important; /* Geef de randen wat witte witmarge voor de printer */
+        box-sizing: border-box;
+    }
+    
+    /* Maak de emoji's en de tekst groter op papier zodat het er mooier op staat */
+    .print-cell-emoji {
+        font-size: 35px !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .print-cell-text {
+        font-size: 14px !important;
     }
 
     @page {
