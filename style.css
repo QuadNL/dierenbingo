@@ -580,6 +580,48 @@ main {
 }
 
 @media print {
+    /* 1. Verberg ALLES van de normale interface */
+    body * {
+        visibility: hidden;
+    }
+
+    /* 2. Maak alleen de print-modal en de kaarten zichtbaar */
+    #modal-print-cards, 
+    #modal-print-cards *,
+    #print-preview, 
+    #print-preview * {
+        visibility: visible;
+    }
+
+    /* 3. Positioneer de kaarten bovenaan de fysieke pagina */
+    #modal-print-cards {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* 4. Verberg de modal-knoppen en titels tijdens het printen */
+    .modal-content h2,
+    .modal-buttons,
+    #modal-print-cards > div:first-of-type,
+    button {
+        display: none !important;
+    }
+
+    /* 5. Optimaliseer de pagina-instellingen */
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+
+    body {
+        background: none !important; /* Verbergt de feest-wallpaper */
+    }
+}@media print {
     #modal-print-cards {
         position: static;
         background: white !important;
