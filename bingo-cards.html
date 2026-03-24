@@ -60,17 +60,17 @@
             padding: 1rem;
         }
         
-        /* A4 Page Container - holds 4 cards (2x2) */
+        /* A4 Page Container - Landscape - holds 4 cards (2x2) */
         .page {
-            width: 210mm;
-            height: 297mm;
+            width: 297mm;
+            height: 210mm;
             background: white;
             margin: 0 auto;
-            padding: 1cm;
+            padding: 0.8cm;
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            gap: 0.5cm;
+            gap: 0.4cm;
             page-break-after: always;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -139,16 +139,19 @@
         }
         
         /* Responsive for screen view */
-        @media screen and (max-width: 1024px) {
+        @media screen and (max-width: 1200px) {
             #controls {
                 padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
             }
             
             .page {
                 width: 100%;
-                max-width: 600px;
+                max-width: 900px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 margin: 0 auto 2rem;
+                aspect-ratio: 297 / 210;
             }
         }
         
